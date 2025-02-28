@@ -6,6 +6,9 @@ import subprocess
 from activitysim.core import inject
 
 
+# FIXME - This seems to be a hack to get the populationsim steps imported
+# Can this just be done in the run_mp.py script?
+
 def teardown_function(func):
     inject.clear_cache()
     inject.reinject_decorated_tables()
