@@ -1,5 +1,6 @@
 import os
 
+import sys
 import pandas as pd
 
 from activitysim.core import config
@@ -8,7 +9,15 @@ from activitysim.core import pipeline
 from activitysim.core import inject
 from activitysim.core import mp_tasks
 
-from populationsim import steps
+# Get the absolute path of the parent directory
+here = os.path.dirname(__file__)
+parent_dir = os.path.abspath(os.path.join(here, "..", ".."))
+
+# Add the parent directory to sys.path
+sys.path.append(parent_dir)
+
+from populationsim import steps  # noqa: E402
+
 
 TAZ_COUNT = 36
 TAZ_100_HH_COUNT = 33
