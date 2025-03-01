@@ -16,5 +16,12 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
     "ruff>=0.9.9",
 ]
+
+[pytest.ini]
+python_paths = [
+    "populationsim",
+    "tests",
+    ]

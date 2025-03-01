@@ -120,6 +120,31 @@ wheels = [
 ]
 
 [[package]]
+name = "coverage"
+version = "7.6.12"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/d6/2b53ab3ee99f2262e6f0b8369a43f6d66658eab45510331c0b3d5c8c4272/coverage-7.6.12.tar.gz", hash = "sha256:48cfc4641d95d34766ad41d9573cc0f22a48aa88d22657a1fe01dca0dbae4de2", size = 805941 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/eb/cf062b1c3dbdcafd64a2a154beea2e4aa8e9886c34e41f53fa04925c8b35/coverage-7.6.12-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:e7575ab65ca8399c8c4f9a7d61bbd2d204c8b8e447aab9d355682205c9dd948d", size = 208343 },
+    { url = "https://files.pythonhosted.org/packages/95/42/4ebad0ab065228e29869a060644712ab1b0821d8c29bfefa20c2118c9e19/coverage-7.6.12-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:8161d9fbc7e9fe2326de89cd0abb9f3599bccc1287db0aba285cb68d204ce929", size = 208769 },
+    { url = "https://files.pythonhosted.org/packages/44/9f/421e84f7f9455eca85ff85546f26cbc144034bb2587e08bfc214dd6e9c8f/coverage-7.6.12-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3a1e465f398c713f1b212400b4e79a09829cd42aebd360362cd89c5bdc44eb87", size = 237553 },
+    { url = "https://files.pythonhosted.org/packages/c9/c4/a2c4f274bcb711ed5db2ccc1b851ca1c45f35ed6077aec9d6c61845d80e3/coverage-7.6.12-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f25d8b92a4e31ff1bd873654ec367ae811b3a943583e05432ea29264782dc32c", size = 235473 },
+    { url = "https://files.pythonhosted.org/packages/e0/10/a3d317e38e5627b06debe861d6c511b1611dd9dc0e2a47afbe6257ffd341/coverage-7.6.12-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1a936309a65cc5ca80fa9f20a442ff9e2d06927ec9a4f54bcba9c14c066323f2", size = 236575 },
+    { url = "https://files.pythonhosted.org/packages/4d/49/51cd991b56257d2e07e3d5cb053411e9de5b0f4e98047167ec05e4e19b55/coverage-7.6.12-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:aa6f302a3a0b5f240ee201297fff0bbfe2fa0d415a94aeb257d8b461032389bd", size = 235690 },
+    { url = "https://files.pythonhosted.org/packages/f7/87/631e5883fe0a80683a1f20dadbd0f99b79e17a9d8ea9aff3a9b4cfe50b93/coverage-7.6.12-cp39-cp39-musllinux_1_2_i686.whl", hash = "sha256:f973643ef532d4f9be71dd88cf7588936685fdb576d93a79fe9f65bc337d9d73", size = 234040 },
+    { url = "https://files.pythonhosted.org/packages/7c/34/edd03f6933f766ec97dddd178a7295855f8207bb708dbac03777107ace5b/coverage-7.6.12-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:78f5243bb6b1060aed6213d5107744c19f9571ec76d54c99cc15938eb69e0e86", size = 235048 },
+    { url = "https://files.pythonhosted.org/packages/ee/1e/d45045b7d3012fe518c617a57b9f9396cdaebe6455f1b404858b32c38cdd/coverage-7.6.12-cp39-cp39-win32.whl", hash = "sha256:69e62c5034291c845fc4df7f8155e8544178b6c774f97a99e2734b05eb5bed31", size = 211085 },
+    { url = "https://files.pythonhosted.org/packages/df/ea/086cb06af14a84fe773b86aa140892006a906c5ec947e609ceb6a93f6257/coverage-7.6.12-cp39-cp39-win_amd64.whl", hash = "sha256:b01a840ecc25dce235ae4c1b6a0daefb2a203dba0e6e980637ee9c2f6ee0df57", size = 211965 },
+    { url = "https://files.pythonhosted.org/packages/7a/7f/05818c62c7afe75df11e0233bd670948d68b36cdbf2a339a095bc02624a8/coverage-7.6.12-pp39.pp310-none-any.whl", hash = "sha256:7e39e845c4d764208e7b8f6a21c541ade741e2c41afabdfa1caa28687a3c98cf", size = 200558 },
+    { url = "https://files.pythonhosted.org/packages/fb/b2/f655700e1024dec98b10ebaafd0cedbc25e40e4abe62a3c8e2ceef4f8f0a/coverage-7.6.12-py3-none-any.whl", hash = "sha256:eb8668cfbc279a536c633137deeb9435d2962caec279c3f8cf8b91fff6ff8953", size = 200552 },
+]
+
+[package.optional-dependencies]
+toml = [
+    { name = "tomli" },
+]
+
+[[package]]
 name = "cytoolz"
 version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -311,6 +336,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
+    { name = "pytest-cov" },
     { name = "ruff" },
 ]
 
@@ -326,6 +352,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "pytest", specifier = ">=8.3.4" },
+    { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "ruff", specifier = ">=0.9.9" },
 ]
 
@@ -563,6 +590,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/05/35/30e0d83068951d90a01852cb1cef56e5d8a09d20c7f511634cc2f7e0372a/pytest-8.3.4.tar.gz", hash = "sha256:965370d062bce11e73868e0335abac31b4d3de0e82f4007408d242b4f8610761", size = 1445919 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/11/92/76a1c94d3afee238333bc0a42b82935dd8f9cf8ce9e336ff87ee14d9e1cf/pytest-8.3.4-py3-none-any.whl", hash = "sha256:50e16d954148559c9a74109af1eaf0c945ba2d8f30f0a3d3335edde19788b6f6", size = 343083 },
+]
+
+[[package]]
+name = "pytest-cov"
+version = "6.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "coverage", extra = ["toml"] },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/be/45/9b538de8cef30e17c7b45ef42f538a94889ed6a16f2387a6c89e73220651/pytest-cov-6.0.0.tar.gz", hash = "sha256:fde0b595ca248bb8e2d76f020b465f3b107c9632e6a1d1705f17834c89dcadc0", size = 66945 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/36/3b/48e79f2cd6a61dbbd4807b4ed46cb564b4fd50a76166b1c4ea5c1d9e2371/pytest_cov-6.0.0-py3-none-any.whl", hash = "sha256:eee6f1b9e61008bd34975a4d5bab25801eb31898b032dd55addc93e96fcaaa35", size = 22949 },
 ]
 
 [[package]]
