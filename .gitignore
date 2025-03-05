@@ -2,6 +2,7 @@ sandbox/
 regress/
 example_test_no_integerizing/
 example_mtc/
+example_weighting_subsample/
 .idea
 .ipynb_checkpoints
 

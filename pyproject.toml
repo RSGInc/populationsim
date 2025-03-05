@@ -2,7 +2,9 @@
 name = "nick-populationsim"
 version = "0.6.3"
 description = "Population Synthesis (for ActivitySim)"
-authors = ["Ben Stabler <ben.stabler@rsginc.com>"]
+authors = [
+    { name = "Ben Stabler", email = "ben.stabler@rsginc.com" }
+    ]
 readme = "README.md"
 requires-python = ">=3.9,<3.10"
 dependencies = [
@@ -10,6 +12,7 @@ dependencies = [
     "numpy==1.25.2",
     "ortools==9.8.3296",
     "pandas==2.1.0",
+    "setuptools>=75.8.2",
     "tqdm>=4.67.1",
 ]
 
@@ -24,4 +27,9 @@ dev = [
 python_paths = [
     "populationsim",
     "tests",
-    ]
+]
+
+[tool.setuptools]
+packages = [
+    "populationsim",
+]
