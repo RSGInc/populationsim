@@ -6,7 +6,6 @@ import logging
 
 import pandas as pd
 import numpy as np
-from tqdm import tqdm
 
 from activitysim.core import pipeline
 from activitysim.core import inject
@@ -80,7 +79,7 @@ def expand_households():
             probs = list(df.sample_weight / df.sample_weight.sum())
             return [hh_ids, probs]
 
-        group_hh_probs = [group_probs(*x) for x in tqdm(grouper)]      
+        group_hh_probs = [group_probs(*x) for x in grouper]      
         
         # get a repeatable random number sequence generator for consistent choice results
         prng = pipeline.get_rn_generator().get_external_rng('expand_households')
@@ -92,7 +91,7 @@ def expand_households():
             hh_probs = group_hh_probs[group_id][HH_PROBS]
             return prng.choice(hh_ids, p=hh_probs)          
 
-        expanded_weights[household_id_col] = [chooser(x) for x in tqdm(expanded_weights.group_id)]
+        expanded_weights[household_id_col] = [chooser(x) for x in expanded_weights.group_id]
 
         # FIXME - omit in production?
         del expanded_weights['group_id']
