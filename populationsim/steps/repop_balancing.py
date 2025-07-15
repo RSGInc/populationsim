@@ -84,56 +84,58 @@ def repop_balancing(settings, crosswalk, control_spec, incidence_table):
         low_ids = seed_crosswalk_df[low_geography].unique()
         for low_id in low_ids:
 
-            trace_label = "%s_%s_%s_%s" % (seed_geography, seed_id, low_geography, low_id)
-            logger.info("balance and integerize %s" % trace_label)
+            if low_id in low_controls_df[total_hh_control_col]: # low_id not in low_controls_df has a 0 target number of households
 
-            # weights table for this zone with household_id index and low_geography column
-            zone_weights_df = pd.DataFrame(index=seed_weights_df.index)
-            zone_weights_df[low_geography] = low_id
+                trace_label = "%s_%s_%s_%s" % (seed_geography, seed_id, low_geography, low_id)
+                logger.info("balance and integerize %s" % trace_label)
 
-            # scale seed weights by relative hh counts
-            # it doesn't makes sense to repop balance with integer weights
-            low_zone_hh_count = low_controls_df[total_hh_control_col].loc[low_id]
-            scaling_factor = float(low_zone_hh_count)/seed_zone_hh_count
-            initial_weights = seed_weights_df['balanced_weight'] * scaling_factor
+                # weights table for this zone with household_id index and low_geography column
+                zone_weights_df = pd.DataFrame(index=seed_weights_df.index)
+                zone_weights_df[low_geography] = low_id
 
-            # - balance
-            status, weights_df, controls_df = do_balancing(
-                control_spec=low_control_spec,
-                total_hh_control_col=total_hh_control_col,
-                max_expansion_factor=max_expansion_factor,
-                min_expansion_factor=min_expansion_factor,
-                absolute_upper_bound=absolute_upper_bound,
-                absolute_lower_bound=absolute_lower_bound,
-                incidence_df=seed_incidence_df,
-                control_totals=low_controls_df.loc[low_id],
-                initial_weights=initial_weights)
+                # scale seed weights by relative hh counts
+                # it doesn't makes sense to repop balance with integer weights
+                low_zone_hh_count = low_controls_df[total_hh_control_col].loc[low_id]
+                scaling_factor = float(low_zone_hh_count)/seed_zone_hh_count
+                initial_weights = seed_weights_df['balanced_weight'] * scaling_factor
 
-            logger.info("repop_balancing balancing %s status: %s" % (trace_label, status))
-            if not status['converged']:
-                raise RuntimeError("repop_balancing for %s did not converge" % trace_label)
+                # - balance
+                status, weights_df, controls_df = do_balancing(
+                    control_spec=low_control_spec,
+                    total_hh_control_col=total_hh_control_col,
+                    max_expansion_factor=max_expansion_factor,
+                    min_expansion_factor=min_expansion_factor,
+                    absolute_upper_bound=absolute_upper_bound,
+                    absolute_lower_bound=absolute_lower_bound,
+                    incidence_df=seed_incidence_df,
+                    control_totals=low_controls_df.loc[low_id],
+                    initial_weights=initial_weights)
 
-            zone_weights_df['balanced_weight'] = weights_df['final']
+                logger.info("repop_balancing balancing %s status: %s" % (trace_label, status))
+                if not status['converged']:
+                    raise RuntimeError("repop_balancing for %s did not converge" % trace_label)
 
-            # - integerize
-            integer_weights, status = do_integerizing(
-                trace_label=trace_label,
-                control_spec=control_spec,
-                control_totals=low_controls_df.loc[low_id],
-                incidence_table=seed_incidence_df,
-                float_weights=weights_df['final'],
-                total_hh_control_col=total_hh_control_col)
+                zone_weights_df['balanced_weight'] = weights_df['final']
 
-            logger.info("repop_balancing integerizing status: %s" % status)
+                # - integerize
+                integer_weights, status = do_integerizing(
+                    trace_label=trace_label,
+                    control_spec=control_spec,
+                    control_totals=low_controls_df.loc[low_id],
+                    incidence_table=seed_incidence_df,
+                    float_weights=weights_df['final'],
+                    total_hh_control_col=total_hh_control_col)
 
-            zone_weights_df['integer_weight'] = integer_weights
+                logger.info("repop_balancing integerizing status: %s" % status)
 
-            logger.info("Total balanced weights for %s = %s" %
-                        (trace_label, zone_weights_df['balanced_weight'].sum()))
-            logger.info("Total integerized weights for %s = %s" %
-                        (trace_label, zone_weights_df['integer_weight'].sum()))
+                zone_weights_df['integer_weight'] = integer_weights
 
-            low_weight_list.append(zone_weights_df)
+                logger.info("Total balanced weights for %s = %s" %
+                            (trace_label, zone_weights_df['balanced_weight'].sum()))
+                logger.info("Total integerized weights for %s = %s" %
+                            (trace_label, zone_weights_df['integer_weight'].sum()))
+
+                low_weight_list.append(zone_weights_df)
 
     # concat all low geography zone level results
     low_weights_df = pd.concat(low_weight_list).reset_index()
