@@ -92,6 +92,7 @@ Contents
    getting_started
    application_configuration
    validation
+   docs_build
    software
    docs
 
