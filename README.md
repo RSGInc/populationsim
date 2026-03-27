@@ -91,3 +91,8 @@ See [examples/README.md](examples/README.md) for example-specific notes.
 ## Documentation
 
 https://activitysim.github.io/populationsim/
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local development and verification
+steps.

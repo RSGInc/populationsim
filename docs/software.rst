@@ -202,8 +202,3 @@ repop_balancing
 ^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.repop_balancing
-
-Contribution Guidelines
------------------------
-
-PopulationSim development follows the same `development guidelines <https://activitysim.github.io/activitysim/development.html>`__ as ActivitySim.
