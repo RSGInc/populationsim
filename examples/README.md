@@ -1,10 +1,23 @@
 # PopulationSim Examples
 
-This directory contains example projects for PopulationSim.
+This directory contains runnable example projects for PopulationSim. Each
+example is structured as a small project with its own `configs`, `data`, and
+`output` directories.
+
+## Environment
+
+From the repository root, the preferred setup is:
+
+```bash
+uv sync --dev
+```
+
+Then run commands with `uv run ...`.
 
 ## Command-Line Interface
 
-PopulationSim now supports a command-line interface (CLI) that allows you to run the package directly from the command line:
+PopulationSim provides a CLI that can be run either through the installed
+`populationsim` entry point or with `python -m populationsim`:
 
 ```bash
 populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
@@ -24,52 +37,89 @@ populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
 - `-e, --ext`: Package of extension modules to load
 - `--fast`: Do not limit process to one thread
 
-### Examples
-
-1. Basic usage:
-
-```bash
-populationsim -c ./configs -d ./data -o ./output
-```
-
-2. Using a working directory:
-
-```bash
-populationsim -w ./my_project
-```
-
-3. Using multiple config and data directories:
-
-```bash
-populationsim -c ./configs -c ./configs_mp -d ./data -d ./additional_data -o ./output
-```
-
-4. Running with multiprocessing:
-
-```bash
-populationsim -c ./configs -d ./data -o ./output -m 4
-```
-
-5. Resuming from a checkpoint:
-
-```bash
-populationsim -c ./configs -d ./data -o ./output -r some_step
-```
-
 ## Example Projects
 
-- `example_calm`: Example using CALM data
-- `example_calm_repop`: Example using CALM data with repopulation
-- `example_oceanside_repop`: Example using Oceanside data with repopulation
-- `example_survey_weighting`: Example of survey weighting
-- `example_test`: Test example with various configurations
+- `example_calm`: Base synthetic population run using CALM data
+- `example_calm_repop`: Repopulation example that depends on the base CALM run
+- `example_oceanside_repop`: Oceanside repopulation example with a pipeline setup helper
+- `example_survey_weighting`: Survey-weighting workflow
+- `example_test`: Small test fixture with standard, flex, and multiprocess configs
+
+## Common Run Patterns
+
+### Run an example wrapper script
+
+Each example with a `run_populationsim.py` wrapper can be run from its example
+directory:
+
+```bash
+cd examples/example_calm
+uv run python run_populationsim.py
+```
+
+Available wrapper-script examples:
+
+- `example_calm`
+- `example_calm_repop`
+- `example_oceanside_repop`
+- `example_survey_weighting`
+- `example_test`
+
+### Run through the CLI from the repo root
+
+```bash
+uv run python -m populationsim \
+  -c ./examples/example_test/configs \
+  -d ./examples/example_test/data \
+  -o ./examples/example_test/output
+```
+
+### Use a working directory
+
+```bash
+uv run python -m populationsim -w ./examples/example_test
+```
+
+### Use multiple config directories
+
+```bash
+uv run python -m populationsim \
+  -c ./examples/example_test/configs_mp \
+  -c ./examples/example_test/configs \
+  -d ./examples/example_test/data \
+  -o ./examples/example_test/output \
+  -m 2
+```
+
+### Resume from a checkpoint
+
+```bash
+uv run python -m populationsim \
+  -c ./examples/example_test/configs \
+  -d ./examples/example_test/data \
+  -o ./examples/example_test/output \
+  -r expand_households
+```
+
+## Example Notes
+
+### `example_calm_repop`
+
+This example expects outputs from `example_calm`. Run the base CALM example
+first so `example_calm/output/pipeline.h5` exists.
+
+### `example_oceanside_repop`
+
+This example uses `construct_pipe.py` to prepare the pipeline before running
+PopulationSim.
 
 ## CLI Example Script
 
-The `cli_example.py` script demonstrates how to use the PopulationSim CLI from Python code. You can run it with:
+The `cli_example.py` script demonstrates how to invoke the CLI from Python
+code. You can run it with:
 
 ```bash
-python cli_example.py
+uv run python examples/cli_example.py
 ```
 
-This will run the Oceanside repopulation example using the CLI.
+It runs the `example_test` configuration through `python -m populationsim`.

@@ -154,7 +154,7 @@ Working Directory Contents:
 +-----------------------+--------------------------------------------------------------------------------------------------------+
 | /configs              | Sub-directory containing control specifications and configuration settings                             |
 +-----------------------+--------------------------------------------------------------------------------------------------------+
-| /configs_mp           | Sub-directory containing configuration settings for running multi-processed if applicable              |
+| /configs_mp           | Optional sub-directory containing additional settings for multi-process runs                           |
 +-----------------------+--------------------------------------------------------------------------------------------------------+
 | /data                 | Sub-directory containing all input files                                                               |
 +-----------------------+--------------------------------------------------------------------------------------------------------+
@@ -194,7 +194,7 @@ Working Directory Contents:
 +=====================================+======================================================================+
 | control_totals_GEOG_NAME.csv        | Marginal control totals at each spatial resolution named *GEOG_NAME* |
 +-------------------------------------+----------------------------------------------------------------------+
-| geo_crosswalk.csv                   | Geographic cross-walk file                                           |
+| geo_cross_walk.csv                  | Geographic cross-walk file                                           |
 +-------------------------------------+----------------------------------------------------------------------+
 | seed_households.csv                 | Seed sample of households                                            |
 +-------------------------------------+----------------------------------------------------------------------+
@@ -207,7 +207,7 @@ Working Directory Contents:
 
 */output* Sub-directory Contents (populated at the end of a PopulationSim run):
 
-This sub-directory is populated at the end of the PopulationSim run. The table below list all possible outputs from a PopulationSim run. The user has the option to specify the output files that should be exported at the end of a run. Details can be found in the *Configuring Settings File* section.
+This sub-directory is populated at the end of the PopulationSim run. The table below lists common outputs from a PopulationSim run. Exact outputs depend on the configured run steps, integerization mode, and ``output_tables`` settings. Details can be found in the *Configuring Settings File* section.
 
 +---------------------------------+----------------------------+-----------------------------------------------------------------------------------------+
 | File                            | Group                      | Description                                                                             |
@@ -268,7 +268,7 @@ PopulationSim is configured using the *configs/settings.yaml* file. The user has
 .. note::
    When running PopulationSim, multiple settings files can be specified so long as the ``inherit_settings: True`` setting is included in
    subsequent files.  This feature is used for the multi-processing configuration described below.  To utilize this feature, once can run PopulationSim
-   with the following command: ``python run_populationsim.py -c configs_mp -c configs``.  This command specifies two config folders, each with
+   with the following command: ``python -m populationsim -c configs_mp -c configs -d data -o output``.  This command specifies two config folders, each with
    a settings file, and the ``configs_mp`` settings inherit from the earlier ``configs`` settings.
 
 The settings shown below are from the PopulationSim application for the CALM region as an example of how a run can be configured. The meta geography for CALM region is named as *Region*, the seed geography is *PUMA* and the two sub-seed geographies are *TRACT* and *TAZ*. The settings below are for this four geography application, but the user can configure PopulationSim for any number of geographies and use different geography names.
@@ -423,42 +423,26 @@ Note that Seed-Households, Seed-Persons and Geographic CrossWalk are all require
 	- tablename: REGION_control_data
 		filename : scaled_control_totals_meta.csv
 
-+--------------+---------------------------------------------------------------------------------------+
-| Attribute    | Description                                                                           |
-+==============+=======================================================================================+
-| tablename    | Name of the imported CSV file in the PopulationSim data pipeline. The input |br|      |
-|              | names in the PopulationSim data pipeline should be named as per the following |br|    |
-|              | standard: |br|                                                                        |
-|              | 1. Seed-Households - *households* |br|                                                |
-|              |                                                                                       |
-|              |    Households across all Seed geographies should be in one file. There should be |br| |
-|              |    a Seed geography field with name as specified in the settings file. The seed  |br| |
-|              |    geography identifies which Seed geography unit each household belongs to           |
-|              |                                                                                       |
-|              | 2. Seed-Persons - *persons* |br|                                                      |
-|              |                                                                                       |
-|              |    Persons across all Seed geographies should be in one file. There should be a |br|  |
-|              |    Seed geography field with name as specified in the settings file. The seed  |br|   |
-|              |    geography identifies which Seed geography unit each person belongs to              |
-|              |                                                                                       |
-|              | 3. Geographic CrossWalk - *geo_cross_walk* |br|                                       |
-|              |                                                                                       |
-|              |    The field names in the geographic cross-walk should be same as the geography |br|  |
-|              |    names specified in the settings file                                               |
-|              |                                                                                       |
-|              | 4. Control data at each control geography - *GEOG_NAME_control_data*, |br|            |
-|              |    where *GEOG_NAME*  is the name of the control geography (TAZ, TRACT and REGION)    |
-|              |                                                                                       |
-+--------------+---------------------------------------------------------------------------------------+
-| filename     | Name of the input CSV file in the data folder                                         |
-+--------------+---------------------------------------------------------------------------------------+
-| index_col    | Name of the unique ID field in the seed household data                                |
-+--------------+---------------------------------------------------------------------------------------+
-| rename_columns   | Column map of fields to be renamed. The format for the column map is as follows: |br| |
-|              | ``Name in CSV: New Name``                                                             |
-+--------------+---------------------------------------------------------------------------------------+
-| drop_columns | List of columns to be dropped from the input data                                     |
-+--------------+---------------------------------------------------------------------------------------+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 80
+
+   * - Attribute
+     - Description
+   * - ``tablename``
+     - Name of the imported CSV file in the PopulationSim data pipeline.
+       Standard table names include ``households``, ``persons``,
+       ``geo_cross_walk``, and ``GEOG_NAME_control_data`` for each control
+       geography such as ``TAZ``, ``TRACT``, or ``REGION``.
+   * - ``filename``
+     - Name of the input CSV file in the data folder.
+   * - ``index_col``
+     - Name of the unique ID field in the seed household data.
+   * - ``rename_columns``
+     - Column map of fields to be renamed using the format
+       ``Name in CSV: New Name``.
+   * - ``drop_columns``
+     - List of columns to be dropped from the input data.
 
 PopulationSim requires that the column names must be unqiue across all the control files. In case there are duplicate column names in the raw control files, user can use the column map feature to rename the columns appropriately.
 
@@ -508,7 +492,7 @@ The control specification file is specified using a different token name for the
 
 **Output Tables**:
 
-The ``output_tables:`` setting is used to control which outputs to write to disk. The :ref:`inputs_outputs` section listed all possible outputs. The user can specify either a list of output tables to include or to skip using the *action* attribute as shown below in the example. if neither is specified, then all output tables will be written. The HDF5 data pipeline and all summary files are written out regardless of this setting.
+The ``output_tables:`` setting is used to control which pipeline tables to write to disk. The :ref:`inputs_outputs` section lists common outputs. The user can specify either a list of output tables to include or to skip using the *action* attribute as shown below in the example. If this setting is omitted, pipeline tables are not exported by default. The HDF5 pipeline and selected synthetic population outputs are controlled separately.
 
 ::
 
@@ -581,8 +565,9 @@ This setting lists the sub-modules or steps to be run by the PopulationSim orche
       - sub_balancing.geography=TRACT
       - sub_balancing.geography=TAZ
       - expand_households
-      - write_results
       - summarize
+      - write_tables
+      - write_synthetic_population
 
     #resume_after: integerize_final_seed_weights
 
@@ -631,7 +616,7 @@ This sections describes the settings that are additionally configured for runnin
 multiprocessing to reduce runtime.  PopulationSim uses ActivitySim's multiprocessing capabilities, which
 are described in more detail `here <https://activitysim.github.io/activitysim/howitworks.html#multiprocessing>`_.
 
-The example below can be found in the ``example_calm\configs_mp\settings.yaml`` file.  The group of model steps
+The example below can be found in the ``example_calm/configs_mp/settings.yaml`` file.  The group of model steps
 identified as ``mp_seed_balancing`` and starting with ``input_pre_processor``
 are run single process until the next group of model steps identified as ``mp_sub_balancing_TAZ`` and starting with
 ``sub_balancing.geography=TAZ`` is reached, at which time PopulationSim runs these steps in parallel using two processors
@@ -693,7 +678,7 @@ This sections describes the settings that are configured differently for the *re
 
 **Input Data Tables for repop mode**
 
-The repop mode runs over an existing synthetic population and uses the data pipeline (HDF5 file) from the regular run as an input. User should copy the HDF5 file from the regular outputs to the *output* folder of the repop set up. The data input which needs to be specified in this setting is the control data for the subset of geographies to be modified. Input tables for the repop mode can be specified in the same manner as regular mode. However, only one geography can be controlled and the geography must be the lowest in "geographies" setting. In the example below, TAZ controls are specified. The controls specified in TAZ_control_data do not have to be consistent with the controls specified in the data used to control the initial population. Only those geographic units to be repopulated should be specified in the control data (for example, TAZs 314 through 317).
+The repop mode runs over an existing synthetic population and uses the data pipeline (HDF5 file) from the regular run as an input. The repop example wrapper copies ``pipeline.h5`` from the base run into the repop ``output`` folder when needed, but the same file can also be copied manually. The data input which needs to be specified in this setting is the control data for the subset of geographies to be modified. Input tables for the repop mode can be specified in the same manner as regular mode. However, only one geography can be controlled and the geography must be the lowest in the ``geographies`` setting. In the example below, TAZ controls are specified. The controls specified in ``TAZ_control_data`` do not have to be consistent with the controls specified in the data used to control the initial population. Only those geographic units to be repopulated should be specified in the control data.
 
 ::
 
@@ -719,11 +704,11 @@ The repop mode runs over an existing synthetic population and uses the data pipe
 
 **Output Tables for repop mode**:
 
-It should be noted that only the summary_GEOG_NAME.csv summary file is available for the repop mode.
+Repop runs typically emit the geography-specific summary files and any explicitly requested pipeline tables.
 
 **Steps for repop mode**:
 
-When running PoulationSim in repop mode, the steps specified in this setting are run. As mentioned earlier, the repop mode runs over an existing synthetic population. The default value for the ``resume_after`` setting under the repop mode is *summarize* which is the last step of a regular run. In other words, the repop mode starts from the last step of the regular run and modifies the regular synthetic population as per the new controls. The user can choose either *append* or *replace* in the ``expand_households.repop`` attribute to modify the existing synthetic population. The *append* option adds to the existing synthetic population in the specified geographies, while the *replace* option replaces any existing synthetic population with newly synthesized population in the specified geographies.
+When running PopulationSim in repop mode, the steps specified in this setting are run. As mentioned earlier, the repop mode runs over an existing synthetic population. The default value for the ``resume_after`` setting under the repop mode is *summarize*, which is the last step of a regular run. In other words, the repop mode starts from the last step of the regular run and modifies the regular synthetic population as per the new controls. The user can choose either *append* or *replace* in the ``expand_households.repop`` attribute to modify the existing synthetic population. The *append* option adds to the existing synthetic population in the specified geographies, while the *replace* option replaces any existing synthetic population with newly synthesized population in the specified geographies.
 
 ::
 
@@ -797,7 +782,7 @@ To obtain the final weights by household ID, the seed geography weights table mu
       - seed_geography_weights
       ...
 
-The seed_geography_weights file contains the following columns:
+The seed geography weights table contains the following columns:
 
 ::
 

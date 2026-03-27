@@ -55,9 +55,8 @@ being implemented in the ActivitySim framework means:
 
 * `Testing <https://activitysim.github.io/activitysim/development.html>`__
 
-  * A protected master branch that can only be written to after tests have passed
   * `pytest <https://docs.pytest.org/en/latest/>`__ for tests
-  * `TravisCI <https://travis-ci.org>`__ for building and testing with each commit
+  * Automated checks should be run before merging documentation or code changes
 
 PopulationSim also requires an optimization library for balancing and integerizing.  The software makes
 use of the open source and easy to install `ortools <https://github.com/google/or-tools>`__ package.  The
@@ -69,53 +68,50 @@ exact ortools/cbc version.
 Core Components
 ---------------
 
-assign
-^^^^^^
-
-.. automodule:: populationsim.assign
-   :members:
-
-balancer
-^^^^^^^^
-
-.. automodule:: populationsim.balancer
-   :members:
-
-integerizer
+core.assign
 ^^^^^^^^^^^
 
-.. automodule:: populationsim.integerizer
-   :members:
+.. automodule:: populationsim.core.assign
 
-lp
-^^
+balancing.wrappers
+^^^^^^^^^^^^^^^^^^
 
-.. automodule:: populationsim.lp
-   :members:
+.. automodule:: populationsim.balancing.wrappers
 
-lp_cvx
-^^^^^^
+balancing.single_balancer
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: populationsim.lp_cvx
-   :members:
+.. automodule:: populationsim.balancing.single_balancer
 
-lp_ortools
-^^^^^^^^^^
+balancing.simul_balancer
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: populationsim.lp_ortools
-   :members:
+.. automodule:: populationsim.balancing.simul_balancer
 
-multi_integerizer
-^^^^^^^^^^^^^^^^^
+integerizing.wrappers
+^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: populationsim.multi_integerizer
-   :members:
+.. automodule:: populationsim.integerizing.wrappers
 
-simul_balancer
-^^^^^^^^^^^^^^
+integerizing.single_integerizer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: populationsim.simul_balancer
-   :members:
+.. automodule:: populationsim.integerizing.single_integerizer
+
+integerizing.simul_integerizer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: populationsim.integerizing.simul_integerizer
+
+integerizing.lp_cvx
+^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: populationsim.integerizing.lp_cvx
+
+integerizing.lp_ortools
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: populationsim.integerizing.lp_ortools
 
 .. _model_steps :
 
@@ -128,7 +124,6 @@ input_pre_processor
 ^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.input_pre_processor
-   :members:
 
 .. _setup_data_structures :
 
@@ -136,7 +131,6 @@ setup_data_structures
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.setup_data_structures
-   :members:
 
 .. _initial_seed_balancing :
 
@@ -144,7 +138,6 @@ initial_seed_balancing
 ^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.initial_seed_balancing
-   :members:
 
 .. _meta_control_factoring :
 
@@ -152,7 +145,6 @@ meta_control_factoring
 ^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.meta_control_factoring
-   :members:
 
 .. _final_seed_balancing :
 
@@ -160,7 +152,6 @@ final_seed_balancing
 ^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.final_seed_balancing
-   :members:
 
 .. _integerize_final_seed_weights :
 
@@ -169,7 +160,6 @@ integerize_final_seed_weights
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.integerize_final_seed_weights
-   :members:
 
 .. _sub_balancing :
 
@@ -177,7 +167,6 @@ sub_balancing
 ^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.sub_balancing
-   :members:
 
 .. _expand_households :
 
@@ -185,15 +174,13 @@ expand_households
 ^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.expand_households
-   :members:
 
 .. _write_tables :
 
 write_tables
 ^^^^^^^^^^^^
 
-.. automodule:: populationsim.steps.write_tables
-   :members:
+.. automodule:: populationsim.steps.output
 
 .. _write_synthetic_population :
 
@@ -201,7 +188,6 @@ write_synthetic_population
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.write_synthetic_population
-   :members:
 
 .. _summarize :
 
@@ -209,7 +195,6 @@ summarize
 ^^^^^^^^^
 
 .. automodule:: populationsim.steps.summarize
-   :members:
 
 .. _repop_balancing :
 
@@ -217,7 +202,6 @@ repop_balancing
 ^^^^^^^^^^^^^^^
 
 .. automodule:: populationsim.steps.repop_balancing
-   :members:
 
 Contribution Guidelines
 -----------------------

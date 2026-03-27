@@ -18,7 +18,8 @@ at each geographic level. User can select these summaries using the ``output_tab
 the :ref:`settings` section. The :ref:`inputs_outputs` section lists all the summaries available to user.
 Most population synthesizers will match each control very well at a regional level; therefore such summaries
 are useful but not very insightful into the goodness-of-fit of the tool at lower level geographies. Users
-can download a `validation Jupyter Notebook <https://github.com/activitysim/populationSim/tree/master/scripts>`_ to
+can use the validation notebook and configuration files in the
+`scripts directory <https://github.com/ActivitySim/populationsim/tree/master/scripts>`_ to
 generate advanced summary statistics and validation plots. This validation notebook takes summaries and
 outputs from a PopulationSim run and generates plots and advanced summaries. The notebook is configured to run
 for the CALM region example and includes notes on inputs and configuration settings. To download and run
