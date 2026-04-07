@@ -12,15 +12,14 @@ From the repository root, the preferred setup is:
 uv sync --dev
 ```
 
-Then run commands with `uv run ...`.
+Then run PopulationSim commands with `uv run populationsim ...`.
 
 ## Command-Line Interface
 
-PopulationSim provides a CLI that can be run either through the installed
-`populationsim` entry point or with `python -m populationsim`:
+PopulationSim provides a CLI that can be run through `uv`:
 
 ```bash
-populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
+uv run populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
 ```
 
 ### CLI Options
@@ -68,7 +67,7 @@ Available wrapper-script examples:
 ### Run through the CLI from the repo root
 
 ```bash
-uv run python -m populationsim \
+uv run populationsim \
   -c ./examples/example_test/configs \
   -d ./examples/example_test/data \
   -o ./examples/example_test/output
@@ -77,13 +76,13 @@ uv run python -m populationsim \
 ### Use a working directory
 
 ```bash
-uv run python -m populationsim -w ./examples/example_test
+uv run populationsim -w ./examples/example_test
 ```
 
 ### Use multiple config directories
 
 ```bash
-uv run python -m populationsim \
+uv run populationsim \
   -c ./examples/example_test/configs_mp \
   -c ./examples/example_test/configs \
   -d ./examples/example_test/data \
@@ -94,7 +93,7 @@ uv run python -m populationsim \
 ### Resume from a checkpoint
 
 ```bash
-uv run python -m populationsim \
+uv run populationsim \
   -c ./examples/example_test/configs \
   -d ./examples/example_test/data \
   -o ./examples/example_test/output \

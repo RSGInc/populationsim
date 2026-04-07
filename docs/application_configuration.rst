@@ -268,7 +268,7 @@ PopulationSim is configured using the *configs/settings.yaml* file. The user has
 .. note::
    When running PopulationSim, multiple settings files can be specified so long as the ``inherit_settings: True`` setting is included in
    subsequent files.  This feature is used for the multi-processing configuration described below.  To utilize this feature, once can run PopulationSim
-   with the following command: ``python -m populationsim -c configs_mp -c configs -d data -o output``.  This command specifies two config folders, each with
+   with the following command: ``uv run populationsim -c configs_mp -c configs -d data -o output``.  This command specifies two config folders, each with
    a settings file, and the ``configs_mp`` settings inherit from the earlier ``configs`` settings.
 
 The settings shown below are from the PopulationSim application for the CALM region as an example of how a run can be configured. The meta geography for CALM region is named as *Region*, the seed geography is *PUMA* and the two sub-seed geographies are *TRACT* and *TAZ*. The settings below are for this four geography application, but the user can configure PopulationSim for any number of geographies and use different geography names.

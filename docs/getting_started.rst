@@ -28,19 +28,6 @@ The repository includes a ``uv.lock`` file. If you use
 This creates the project environment and installs PopulationSim in editable
 mode for local development.
 
-Alternative workflow
-~~~~~~~~~~~~~~~~~~~~
-
-If you prefer not to use ``uv``, you can install the package into a local
-virtual environment with ``pip``:
-
-::
-
-  python -m venv .venv
-  source .venv/bin/activate
-  python -m pip install --upgrade pip
-  python -m pip install -e .
-
 
 .. _activitysim :
 
@@ -54,8 +41,8 @@ ActivitySim
   and `numpy <http://numpy.org>`__. It also relies heavily on the
   `ActivitySim <https://activitysim.github.io>`__ package.
 
-  For local development in this repository, prefer the ``uv`` or ``pip``
-  workflows described above. For more information on ActivitySim itself, see
+  For local development in this repository, use the ``uv`` workflow described
+  above. For more information on ActivitySim itself, see
   the ActivitySim `getting started
   <https://activitysim.github.io/activitysim/gettingstarted.html>`__ guide.
 
@@ -149,6 +136,6 @@ interface:
 
   ::
 
-   uv run python -m populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
+   uv run populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
 
   * Review the outputs in the *output* folder

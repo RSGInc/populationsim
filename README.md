@@ -27,27 +27,12 @@ uv sync --dev
 
 This creates the project environment and installs the package in editable mode.
 
-### Alternative: `pip`
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -U pip
-python -m pip install -e .
-```
-
 ## Command-Line Interface
 
-PopulationSim can be run directly from the command line:
+After `uv sync --dev`, run PopulationSim through the project environment:
 
 ```bash
-populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
-```
-
-You can also run the package as a module:
-
-```bash
-python -m populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
+uv run populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
 ```
 
 The CLI supports the current repo entry point defined in `pyproject.toml`,
@@ -80,7 +65,7 @@ uv run python run_populationsim.py
 For a direct CLI run, `example_test` is the smallest self-contained example:
 
 ```bash
-uv run python -m populationsim \
+uv run populationsim \
   -c examples/example_test/configs \
   -d examples/example_test/data \
   -o examples/example_test/output
