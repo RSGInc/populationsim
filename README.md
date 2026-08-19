@@ -1,25 +1,81 @@
 PopulationSim
 =============
 
-[![Build Status](https://travis-ci.org/activitysim/populationsim.svg?branch=master)](https://travis-ci.org/ActivitySim/populationsim) [![Coverage Status](https://coveralls.io/repos/ActivitySim/populationsim/badge.png?branch=master)](https://coveralls.io/r/ActivitySim/populationsim?branch=master)<a href="https://medium.com/zephyrfoundation/populationsim-the-synthetic-commons-670e17383048"><img src="https://github.com/ZephyrTransport/zephyr-website/blob/gh-pages/img/badging/project_pages/populationsim/PopulationSim.png" width="72.6" height="19.8"></a>
-
-
 PopulationSim is an open platform for population synthesis.  It emerged
 from Oregon DOT's desire to build a shared, open, platform that could be
 easily adapted for statewide, regional, and urban transportation planning
 needs.  PopulationSim is implemented in the
 [ActivitySim](https://github.com/activitysim/activitysim) framework.
 
-## Command-Line Interface
+## Requirements
 
-PopulationSim can be run directly from the command line:
+- Python 3.9 through 3.12
+- A local clone of this repository
+
+This repository is configured as a modern Python package with
+[`pyproject.toml`](pyproject.toml) and a `uv.lock` file. If you use
+[`uv`](https://docs.astral.sh/uv/), it is the preferred way to create the
+environment and run commands in this repo.
+
+To install, run:
 
 ```bash
-populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
+uv sync --dev
 ```
 
-See the [examples directory](examples/) for more information on using the command-line interface.
+This creates the project environment and installs the package in editable mode.
+
+## Command-Line Interface
+
+After installation, run PopulationSim through the project environment:
+
+```bash
+uv run populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
+```
+
+The CLI supports the current repo entry point defined in `pyproject.toml`,
+including:
+
+- `-w, --working_dir` for project-style runs with `configs`, `data`, and
+  `output` subdirectories
+- repeated `-c/--config` and `-d/--data` arguments
+- `-m, --multiprocess` for multiprocess configurations
+- `-r, --resume` to resume after a step
+- `-e, --ext` to load extension packages
+
+## Running Examples
+
+The [`examples/`](examples/) directory contains runnable projects that match the
+current repository layout:
+
+- `example_calm`
+- `example_calm_repop`
+- `example_oceanside_repop`
+- `example_survey_weighting`
+- `example_test`
+
+Most examples can be run from their own directory with:
+
+```bash
+uv run python run_populationsim.py
+```
+
+For a direct CLI run, `example_test` is the smallest self-contained example:
+
+```bash
+uv run populationsim \
+  -c examples/example_test/configs \
+  -d examples/example_test/data \
+  -o examples/example_test/output
+```
+
+See [examples/README.md](examples/README.md) for example-specific notes.
 
 ## Documentation
 
 https://activitysim.github.io/populationsim/
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local development and verification
+steps.

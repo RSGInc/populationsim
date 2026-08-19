@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "populationsim"
 version = "0.10.0"
@@ -30,6 +34,8 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=5.0.0",
     "ruff>=0.9.9",
+    "sphinx>=7.4.7",
+    "sphinx-rtd-theme>=3.1.0",
 ]
 
 [pytest.ini]

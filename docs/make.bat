@@ -3,7 +3,7 @@
 REM Command file for Sphinx documentation
 
 if "%SPHINXBUILD%" == "" (
-	set SPHINXBUILD=sphinx-build
+	set SPHINXBUILD=..\.venv\Scripts\sphinx-build.exe
 )
 set BUILDDIR=_build
 set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% .
@@ -47,16 +47,13 @@ if "%1" == "clean" (
 )
 
 
-%SPHINXBUILD% 2> nul
+%SPHINXBUILD% --version 2> nul
 if errorlevel 9009 (
 	echo.
-	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
-	echo.installed, then set the SPHINXBUILD environment variable to point
-	echo.to the full path of the 'sphinx-build' executable. Alternatively you
-	echo.may add the Sphinx directory to PATH.
+	echo.The '%SPHINXBUILD%' command was not found. Run 'uv sync --dev' from
+	echo.the repository root, or set the SPHINXBUILD environment variable to a
+	echo.working sphinx-build command.
 	echo.
-	echo.If you don't have Sphinx installed, grab it from
-	echo.http://sphinx-doc.org/
 	exit /b 1
 )
 

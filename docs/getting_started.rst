@@ -12,43 +12,21 @@ This page describes how to install and run PopulationSim with the provided examp
 Installation
 ------------
 
-1. It is recommended that you install and use a *conda* package manager
-for your system. One easy way to do so is by using `Anaconda 64bit Python 3 <https://www.anaconda.com/distribution/>`__,
-although you should consult the `terms of service <https://www.anaconda.com/terms-of-service>`__
-for this product and ensure you qualify (as of summer 2021, businesses and
-governments with over 200 employees do not qualify for free usage).  If you prefer
-a completely free open source *conda* tool, you can download and install the
-appropriate version of `Miniforge <https://github.com/conda-forge/miniforge#miniforge3>`__.
+PopulationSim is distributed as a standard Python package with
+``pyproject.toml``. The repository currently supports Python 3.9 through 3.12.
 
-2. If you access the internet from behind a firewall, then you will need to configure your proxy server. To do so, create a .condarc file in your Anaconda installation folder (i.e. ``C:\ProgramData\Anaconda3``), such as:
+Preferred workflow
+~~~~~~~~~~~~~~~~~~
 
-::
-
-  proxy_servers:
-    http: http://myproxy.org:8080
-    https: https://myproxy.org:8080
-  ssl_verify: false
-
-3. Create and activate an Anaconda environment (basically a Python install just for this project)
+The repository includes a ``uv.lock`` file. If you use
+`uv <https://docs.astral.sh/uv/>`__, the recommended setup is:
 
 ::
 
-  conda create -n popsim python=3.8
+  uv sync --dev
 
-  # Windows
-  activate popsim
-
-  # Mac
-  conda activate popsim
-
-4. Get and install the PopulationSim package on the activated conda Python environment:
-
-::
-
-  # best to use the conda version of pytables for consistency with activitysim
-  conda install pytables
-
-  pip install populationsim
+This creates the project environment and installs PopulationSim in editable
+mode for local development.
 
 
 .. _activitysim :
@@ -63,28 +41,85 @@ ActivitySim
   and `numpy <http://numpy.org>`__. It also relies heavily on the
   `ActivitySim <https://activitysim.github.io>`__ package.
 
-  The recommended way to get your own scientific Python installation is to
-  install 64 bit Anaconda, which contains many of the libraries upon which
-  ActivitySim depends + some handy Python installation management tools.
-
-  For more information on Anaconda and ActivitySim, see ActivitySim's `getting started
+  For local development in this repository, use the ``uv`` workflow described
+  above. For more information on ActivitySim itself, see
+  the ActivitySim `getting started
   <https://activitysim.github.io/activitysim/gettingstarted.html>`__ guide.
+
+
+Running PopulationSim
+---------------------
+
+PopulationSim can be run in two ways.
+
+**Using the** ``populationsim`` **entry point:**
+
+The installed package provides a ``populationsim`` command that accepts paths to
+the config, data, and output directories directly:
+
+::
+
+  uv run populationsim -c <config_dir> -d <data_dir> -o <output_dir>
+
+Common CLI arguments are:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Argument
+     - Description
+   * - ``-c`` / ``--config``
+     - Path to config directory (may be specified multiple times)
+   * - ``-d`` / ``--data``
+     - Path to data directory (may be specified multiple times)
+   * - ``-o`` / ``--output``
+     - Path to output directory
+   * - ``-w`` / ``--working_dir``
+     - Path to project directory (default: current directory)
+   * - ``-r`` / ``--resume``
+     - Resume after a specific model step
+   * - ``-p`` / ``--pipeline``
+     - Pipeline file name
+   * - ``-s`` / ``--settings_file``
+     - Settings file name
+   * - ``-m`` / ``--multiprocess``
+     - Run multiprocess (optionally specify number of processes)
+   * - ``-e`` / ``--ext``
+     - Package of extension modules to load
+   * - ``--households_sample_size``
+     - Households sample size
+   * - ``--fast``
+     - Do not limit each process to one thread
+
+**Using a** ``run_populationsim.py`` **script:**
+
+Each example includes a ``run_populationsim.py`` convenience script that
+hard-codes the project directory and any example-specific setup (such as
+building a pipeline file before the run). This is the recommended pattern for
+your own projects. Run it with:
+
+::
+
+  uv run python run_populationsim.py
 
 
 Run Examples
 ------------
 
-There are four examples for running PopulationSim, three created using data from the
-Corvallis-Albany-Lebanon Modeling (CALM) region in Oregon and the other using data from
-the Metro Vancouver region in British Columbia.
+There are five runnable examples in the repository:
 
-1. The `example_calm`_ set-up runs PopulationSim,  where a synthetic population is created single-processed for the entire modeling region.
+1. The ``example_calm`` set-up runs a base synthetic population for the CALM region.
 
-2. The `example_calm_mp`_ set-up runs PopulationSim `multi-processed <http://docs.python.org/3/library/multiprocessing.html>`_, where a synthetic population is created for the entire modeling region by simultaneously balancing results using multiple processors on your computer, thereby reducing runtime.
+2. The ``example_calm_repop`` set-up updates the CALM synthetic population for a smaller geography using outputs from the base run.
 
-3. The `example_calm_repop`_ set-up runs PopulationSim in the *repop* mode, which updates the synthetic population for a small part of the region.
+3. The ``example_oceanside_repop`` set-up runs a repop workflow for the Oceanside example.
 
-4. The `example_survey_weighting`_ set-up runs PopulationSim for the case of developing final weights for a household travel survey. More information on the configuration of PopulationSim can be found in the **Application & Configuration** section.
+4. The ``example_survey_weighting`` set-up runs PopulationSim for the case of developing final weights for a household travel survey.
+
+5. The ``example_test`` set-up is a smaller example used by the automated tests and is useful for quick CLI validation.
+
+More information on configuration can be found in the **Application & Configuration** section.
 
 Example_calm
 ~~~~~~~~~~~~
@@ -96,42 +131,47 @@ Follow the steps below to run **example_calm** set up:
 
   ::
 
-   activate popsim
-   python run_populationsim.py
+   cd examples/example_calm
+   uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
-
-Example_calm_mp
-~~~~~~~~~~~~~~~
-
-Follow the steps below to run **example_calm_mp** multiprocessed set up:
-
-  * Open a command prompt in the example_calm folder
-  * In ``configs_mp\setting.yaml``, set ``num_processes: 2`` to a reasonable number of processors for your machine
-  * Run the following commands:
-
-  ::
-
-   activate popsim
-   python run_populationsim.py -c configs_mp -c configs
-
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
 
 Example_calm_repop
 ~~~~~~~~~~~~~~~~~~
 
 The repop configuration requires outputs from a base run. Therefore, the base configuration must be run before running the repop configuration. Follow the steps below to run **example_calm_repop** set up:
 
-  * Copy the **pipeline.h5** file from the example_calm\\output directory to example_calm_repop\\output directory (all PopulationSim files are stored in pipeline.h5 file)
+  * Run ``example_calm`` first so that ``example_calm/output/pipeline.h5`` exists
   * Open a command prompt in the example_calm_repop folder
   * Run the following commands:
 
   ::
 
-   activate popsim
-   python run_populationsim.py
+   cd examples/example_calm_repop
+   uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
+
+Example_oceanside_repop
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Follow the steps below to run **example_oceanside_repop**:
+
+  * Open a command prompt in the example_oceanside_repop folder
+  * Run the following commands:
+
+  .. note::
+
+    Unlike the other examples, the ``output`` directory is not included in the
+    repository and must be created manually before running the script.
+
+  ::
+
+   cd examples/example_oceanside_repop
+   mkdir output
+   uv run python run_populationsim.py
+
+  * Review the outputs in the ``output`` folder
 
 Example_survey_weighting
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,7 +183,28 @@ Follow the steps below to run **example_survey_weighting** set up:
 
   ::
 
-   activate popsim
-   python run_populationsim.py
+   cd examples/example_survey_weighting
+   uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
+
+Example_test
+~~~~~~~~~~~~
+
+Follow the steps below to run **example_test** set up:
+
+  * Open a command prompt in the example_test folder
+  * Run the following commands:
+
+  ::
+
+   cd examples/example_test
+   uv run python run_populationsim.py
+
+  * Review the outputs in the ``output`` folder
+
+  Alternatively, run from the repository root using the CLI entry point:
+
+  ::
+
+   uv run populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
