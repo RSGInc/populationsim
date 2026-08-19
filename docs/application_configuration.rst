@@ -110,12 +110,38 @@ Below is PopulationSim's typical directory structure followed by a description o
   .. image:: images/PopulationSimFolderStructure.png
 
 
-PopulationSim is run via **run_populationsim.py**. The user needs to first activate the *popsim* environment and then call the *run_populationsim.py* Python script to launch a PopulationSim run.
+PopulationSim is run via a ``run_populationsim.py`` script. Each example in the
+repository includes one, and the same pattern can be used for your own projects.
+A minimal script looks like this:
+
+  .. code-block:: python
+
+   import sys
+   import argparse
+   from pathlib import Path
+
+   import populationsim
+
+   if __name__ == "__main__":
+       parser = argparse.ArgumentParser()
+       populationsim.add_run_args(parser)
+       args = parser.parse_args()
+       args.working_dir = Path(__file__).parent.resolve()
+       sys.exit(populationsim.run(args))
+
+Setting ``args.working_dir`` to the script's own directory means PopulationSim
+will look for ``configs/``, ``data/``, and ``output/`` relative to the script,
+regardless of where it is invoked from.  Additional setup steps (e.g. building
+a pipeline file for repop runs) can be inserted before ``populationsim.run()``.
+
+Run the script with:
 
   ::
 
-   activate popsim
-   python run_populationsim.py
+   uv run python run_populationsim.py
+
+Alternatively, PopulationSim can be run without a script using the
+``populationsim`` entry point — see :ref:`getting_started` for details.
 
 PopulationSim is configured using the settings.yaml file. PopulationSim can be configured to run in **regular** mode or **repop** mode.
 
