@@ -34,25 +34,9 @@ data_dir: data
 # Input Data Tables
 # ------------------------------------------------------------------
 # input_pre_processor input_table_list
+# All other required tables are pre-populated into the pipeline by
+# construct_pipe.py before the run starts.
 input_table_list:
-  - tablename: households
-    filename : households.csv
-    index_col: hh_id
-  - tablename: persons
-    filename : persons.csv
-    rename_columns:
-      SPORDER: per_num
-    # drop mixed type fields that appear to have been incorrectly generated
-  - tablename: geo_cross_walk
-    filename : geo_crosswalks.csv
-  - tablename: MAZ_control_data
-    filename : control_totals_maz.csv
-  - tablename: TAZ_control_data
-    filename : control_totals_taz.csv
-  - tablename: REGION_control_data
-    filename : control_totals_region.csv
-  - tablename: geo_cross_walk
-    filename : geo_crosswalks.csv
   - filename : repop_control_totals_maz.csv
     tablename: MAZ_control_data
 

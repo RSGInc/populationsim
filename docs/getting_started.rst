@@ -77,7 +77,7 @@ Follow the steps below to run **example_calm** set up:
    cd examples/example_calm
    uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
 
 Example_calm_repop
 ~~~~~~~~~~~~~~~~~~
@@ -93,7 +93,7 @@ The repop configuration requires outputs from a base run. Therefore, the base co
    cd examples/example_calm_repop
    uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
 
 Example_oceanside_repop
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,12 +103,18 @@ Follow the steps below to run **example_oceanside_repop**:
   * Open a command prompt in the example_oceanside_repop folder
   * Run the following commands:
 
+  .. note::
+
+    Unlike the other examples, the ``output`` directory is not included in the
+    repository and must be created manually before running the script.
+
   ::
 
    cd examples/example_oceanside_repop
+   mkdir output
    uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
 
 Example_survey_weighting
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,7 +129,7 @@ Follow the steps below to run **example_survey_weighting** set up:
    cd examples/example_survey_weighting
    uv run python run_populationsim.py
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
 
 Example_test
 ~~~~~~~~~~~~
@@ -138,4 +144,4 @@ interface:
 
    uv run populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
 
-  * Review the outputs in the *output* folder
+  * Review the outputs in the ``output`` folder
