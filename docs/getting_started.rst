@@ -61,28 +61,36 @@ the config, data, and output directories directly:
 
   uv run populationsim -c <config_dir> -d <data_dir> -o <output_dir>
 
-The available arguments are:
+Common CLI arguments are:
 
 .. list-table::
    :header-rows: 1
-   :widths: 20 80
+   :widths: 25 75
 
    * - Argument
      - Description
-   * - ``-w`` / ``--working_dir``
-     - Path to the project directory (default: current directory)
    * - ``-c`` / ``--config``
      - Path to config directory (may be specified multiple times)
    * - ``-d`` / ``--data``
      - Path to data directory (may be specified multiple times)
    * - ``-o`` / ``--output``
      - Path to output directory
+   * - ``-w`` / ``--working_dir``
+     - Path to project directory (default: current directory)
    * - ``-r`` / ``--resume``
-     - Resume pipeline after the named step
+     - Resume after a specific model step
    * - ``-p`` / ``--pipeline``
      - Pipeline file name
    * - ``-s`` / ``--settings_file``
      - Settings file name
+   * - ``-m`` / ``--multiprocess``
+     - Run multiprocess (optionally specify number of processes)
+   * - ``-e`` / ``--ext``
+     - Package of extension modules to load
+   * - ``--households_sample_size``
+     - Households sample size
+   * - ``--fast``
+     - Do not limit each process to one thread
 
 **Using a** ``run_populationsim.py`` **script:**
 
