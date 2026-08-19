@@ -23,6 +23,11 @@ from populationsim.balancing.constants import (
 from populationsim.core import inject
 
 
+def teardown_function():
+    inject.clear_cache()
+    inject.reinject_decorated_tables()
+
+
 @pytest.mark.parametrize("use_numba", [True, False])
 def test_Konduri(use_numba):
 
@@ -80,19 +85,14 @@ def test_Konduri(use_numba):
     assert status["converged"]
 
 
-def test_hard_constraints_cap_average_seed_expansion():
-    """Reproduce issue #221's expected hard cap interpretation."""
-    inject.clear_cache()
-    inject.add_injectable("settings", {})
-
+def issue_221_balancing_inputs():
     household_count = 100
     target_households = 5100.0
     max_expansion_factor = 50
-    expected_max_weight = target_households / household_count * max_expansion_factor
 
     # The high initial survey weight represents the issue pattern: total survey
     # weights are calibrated to the target total, but one record has a large
-    # starting weight. Current code caps this record at initial_weight * 50.
+    # starting weight.
     high_initial_weight = 1078.0
     remaining_initial_weight = target_households - high_initial_weight
     initial_weights = pd.Series(
@@ -114,6 +114,31 @@ def test_hard_constraints_cap_average_seed_expansion():
     )
     control_totals = pd.Series({"num_hh": target_households, "rare_hh_type": 3000.0})
 
+    return (
+        control_spec,
+        incidence_table,
+        control_totals,
+        initial_weights,
+        max_expansion_factor,
+        high_initial_weight,
+        target_households / household_count,
+    )
+
+
+def test_max_expansion_factor_caps_relative_to_initial_weight():
+    inject.clear_cache()
+    inject.add_injectable("settings", {})
+
+    (
+        control_spec,
+        incidence_table,
+        control_totals,
+        initial_weights,
+        max_expansion_factor,
+        high_initial_weight,
+        _average_seed_expansion,
+    ) = issue_221_balancing_inputs()
+
     status, weights, _ = do_balancing(
         control_spec=control_spec,
         total_hh_control_col="num_hh",
@@ -130,7 +155,42 @@ def test_hard_constraints_cap_average_seed_expansion():
     )
 
     assert status["converged"]
-    assert weights["final"].max() <= expected_max_weight
+    assert weights["final"].max() <= high_initial_weight * max_expansion_factor
+    assert weights["final"].max() > high_initial_weight
+
+
+def test_absolute_upper_bound_caps_final_weight():
+    inject.clear_cache()
+    inject.add_injectable("settings", {})
+
+    (
+        control_spec,
+        incidence_table,
+        control_totals,
+        initial_weights,
+        max_expansion_factor,
+        _high_initial_weight,
+        average_seed_expansion,
+    ) = issue_221_balancing_inputs()
+    absolute_upper_bound = average_seed_expansion * max_expansion_factor
+
+    status, weights, _ = do_balancing(
+        control_spec=control_spec,
+        total_hh_control_col="num_hh",
+        max_expansion_factor=max_expansion_factor,
+        min_expansion_factor=None,
+        absolute_upper_bound=absolute_upper_bound,
+        absolute_lower_bound=None,
+        incidence_df=incidence_table,
+        control_totals=control_totals,
+        initial_weights=initial_weights,
+        use_hard_constraints=True,
+        use_numba=False,
+        numba_precision="float64",
+    )
+
+    assert status["converged"]
+    assert weights["final"].max() <= absolute_upper_bound
 
 
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
