@@ -287,6 +287,7 @@ These settings control the functionality of the PopulationSim algorithm. The set
   USE_SIMUL_INTEGERIZER: True
   USE_CVXPY: False
   max_expansion_factor: 30
+  absolute_upper_bound: 20000
   MAX_BALANCE_ITERATIONS_SIMULTANEOUS: 1000
 
 +--------------------------------------+------------+---------------------------------------------------------------------------------+
@@ -309,16 +310,28 @@ These settings control the functionality of the PopulationSim algorithm. The set
 | USE_CVXPY                            | True/False | A third-party solver is used for integerization - CVXPY or or-tools |br|        |
 |                                      |            | **CVXPY** is currently not available for Windows                                |
 +--------------------------------------+------------+---------------------------------------------------------------------------------+
-| max_expansion_factor                 | > 0        | Maximum HH expansion factor weight setting. This settings dictates the |br|     |
-|                                      |            | ratio of the final weight of the household record to its initial weight. |br|   |
-|                                      |            | For example, a maxExpansionFactor setting of 5 would mean a household |br|      |
-|                                      |            | having a PUMS weight of x can have a final weight of not more than 5x, |br|     |
-|                                      |            | thus effectively restricting the number of times a record can be sampled. |br|  |
+| max_expansion_factor                 | > 0        | Maximum HH expansion factor weight setting. This setting controls the |br|       |
+|                                      |            | ratio of the final weight of each household record to that record's |br|        |
+|                                      |            | initial ``household_weight_col`` value. For example, a setting of 5 |br|        |
+|                                      |            | means a household having an initial weight of x can have a final weight |br|     |
+|                                      |            | of not more than 5x. This is not a cap relative to the average target |br|      |
+|                                      |            | households per seed record.                                                     |
+|                                      |            |                                                                                 |
+|                                      |            | This effectively restricts the number of times a record can be sampled. |br|    |
 |                                      |            | The user might need to adjust this setting to enable sampling of a record |br|  |
 |                                      |            | with a rare household configuration. Otherwise, it might result in some |br|    |
 |                                      |            | controls not being matched due to unavailability of records to sample from.     |
 |                                      |            | The maximum expansion factor may have to be adjusted upwards if the target |br| |
 |                                      |            | is much greater than the seed number of households.                        |br| |
++--------------------------------------+------------+---------------------------------------------------------------------------------+
+| absolute_upper_bound                 | > 0        | Fixed upper bound for household weights. Unlike ``max_expansion_factor``, |br|  |
+|                                      |            | this cap is an absolute scalar value and does not vary by each record's |br|    |
+|                                      |            | initial weight. Use this setting when final household weights should not |br|   |
+|                                      |            | exceed a specific value.                                                        |
++--------------------------------------+------------+---------------------------------------------------------------------------------+
+| absolute_lower_bound                 | >= 0       | Fixed lower bound for household weights. Unlike ``min_expansion_factor``, |br|  |
+|                                      |            | this bound is an absolute scalar value and does not vary by each record's |br|  |
+|                                      |            | initial weight.                                                                |
 +--------------------------------------+------------+---------------------------------------------------------------------------------+
 | MAX_BALANCE_ITERATIONS_SIMULTANEOUS  | Integer    | Number of list balancer iterations.  The default may be more than is needed.    |
 +--------------------------------------+------------+---------------------------------------------------------------------------------+
@@ -777,6 +790,16 @@ User may want to specify the maximum and minimum limit on expansion of initial w
 
   max_expansion_factor: 4 # Default is 30
   min_expansion_factor: 0.5
+
+These factors are relative to each record's initial ``household_weight_col`` value. For example, if a household has an initial survey weight of 100, then ``max_expansion_factor: 4`` allows that household's final weight to reach 400.
+
+To set a fixed cap that applies to all final household weights, use ``absolute_upper_bound``:
+
+::
+
+  absolute_upper_bound: 2550
+
+This is the appropriate setting when the desired cap is based on the average target-to-seed expansion rate, such as ``total target households / total seed households * desired factor``.
 
 The desired output for survey weighting is a list of final weights by household ID. In order to achieve this, the grouping of incidence must be switched off in the yaml settings file as follows:
 

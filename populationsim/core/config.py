@@ -75,6 +75,7 @@ def settings_file_name():
 @inject.injectable(cache=True)
 def settings(settings_file_name):
     settings_dict = read_settings_file(settings_file_name, mandatory=True)
+    validate_settings(settings_dict)
 
     # basic settings validation for sharrow
     sharrow_enabled = settings_dict.get("sharrow", False)
@@ -86,6 +87,26 @@ def settings(settings_file_name):
         )
 
     return settings_dict
+
+
+def validate_settings(settings_dict):
+    singular_bound_settings = {
+        "absolute_upper_bounds": "absolute_upper_bound",
+        "absolute_lower_bounds": "absolute_lower_bound",
+    }
+    unsupported_settings = [
+        (setting_name, singular_bound_settings[setting_name])
+        for setting_name in singular_bound_settings
+        if setting_name in settings_dict
+    ]
+
+    if unsupported_settings:
+        messages = [
+            "'%s' is not supported; use scalar setting '%s' instead"
+            % (setting_name, replacement)
+            for setting_name, replacement in unsupported_settings
+        ]
+        raise RuntimeError("; ".join(messages))
 
 
 # def testing():
