@@ -17,9 +17,7 @@ This repository is configured as a modern Python package with
 [`uv`](https://docs.astral.sh/uv/), it is the preferred way to create the
 environment and run commands in this repo.
 
-## Installation
-
-### Preferred: `uv`
+To install, run:
 
 ```bash
 uv sync --dev
@@ -29,7 +27,7 @@ This creates the project environment and installs the package in editable mode.
 
 ## Command-Line Interface
 
-After `uv sync --dev`, run PopulationSim through the project environment:
+After installation, run PopulationSim through the project environment:
 
 ```bash
 uv run populationsim -c /path/to/configs -d /path/to/data -o /path/to/output
