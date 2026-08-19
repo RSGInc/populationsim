@@ -47,6 +47,55 @@ ActivitySim
   <https://activitysim.github.io/activitysim/gettingstarted.html>`__ guide.
 
 
+Running PopulationSim
+---------------------
+
+PopulationSim can be run in two ways.
+
+**Using the** ``populationsim`` **entry point:**
+
+The installed package provides a ``populationsim`` command that accepts paths to
+the config, data, and output directories directly:
+
+::
+
+  uv run populationsim -c <config_dir> -d <data_dir> -o <output_dir>
+
+The available arguments are:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 80
+
+   * - Argument
+     - Description
+   * - ``-w`` / ``--working_dir``
+     - Path to the project directory (default: current directory)
+   * - ``-c`` / ``--config``
+     - Path to config directory (may be specified multiple times)
+   * - ``-d`` / ``--data``
+     - Path to data directory (may be specified multiple times)
+   * - ``-o`` / ``--output``
+     - Path to output directory
+   * - ``-r`` / ``--resume``
+     - Resume pipeline after the named step
+   * - ``-p`` / ``--pipeline``
+     - Pipeline file name
+   * - ``-s`` / ``--settings_file``
+     - Settings file name
+
+**Using a** ``run_populationsim.py`` **script:**
+
+Each example includes a ``run_populationsim.py`` convenience script that
+hard-codes the project directory and any example-specific setup (such as
+building a pipeline file before the run). This is the recommended pattern for
+your own projects. Run it with:
+
+::
+
+  uv run python run_populationsim.py
+
+
 Run Examples
 ------------
 
@@ -134,14 +183,20 @@ Follow the steps below to run **example_survey_weighting** set up:
 Example_test
 ~~~~~~~~~~~~
 
-Follow the steps below to run **example_test** through the command-line
-interface:
+Follow the steps below to run **example_test** set up:
 
-  * Open a command prompt in the repository root
+  * Open a command prompt in the example_test folder
   * Run the following commands:
 
   ::
 
-   uv run populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
+   cd examples/example_test
+   uv run python run_populationsim.py
 
   * Review the outputs in the ``output`` folder
+
+  Alternatively, run from the repository root using the CLI entry point:
+
+  ::
+
+   uv run populationsim -c examples/example_test/configs -d examples/example_test/data -o examples/example_test/output
