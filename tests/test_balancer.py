@@ -7,7 +7,7 @@ import numpy.testing as npt
 import pytest
 import time
 
-from populationsim.balancing import ListBalancer
+from populationsim.balancing import ListBalancer, do_balancing
 from populationsim.balancing.balancers import (
     np_balancer_py,
     np_simul_balancer_py,
@@ -20,6 +20,7 @@ from populationsim.balancing.constants import (
     DEFAULT_MAX_ITERATIONS,
     MIN_CONTROL_VALUE,
 )
+from populationsim.core import inject
 
 
 @pytest.mark.parametrize("use_numba", [True, False])
@@ -77,6 +78,59 @@ def test_Konduri(use_numba):
 
     npt.assert_almost_equal(weighted_sum, controls["control"], decimal=1)
     assert status["converged"]
+
+
+def test_hard_constraints_cap_average_seed_expansion():
+    """Reproduce issue #221's expected hard cap interpretation."""
+    inject.clear_cache()
+    inject.add_injectable("settings", {})
+
+    household_count = 100
+    target_households = 5100.0
+    max_expansion_factor = 50
+    expected_max_weight = target_households / household_count * max_expansion_factor
+
+    # The high initial survey weight represents the issue pattern: total survey
+    # weights are calibrated to the target total, but one record has a large
+    # starting weight. Current code caps this record at initial_weight * 50.
+    high_initial_weight = 1078.0
+    remaining_initial_weight = target_households - high_initial_weight
+    initial_weights = pd.Series(
+        [high_initial_weight]
+        + [remaining_initial_weight / (household_count - 1)] * (household_count - 1)
+    )
+
+    incidence_table = pd.DataFrame(
+        {
+            "num_hh": np.ones(household_count),
+            "rare_hh_type": [1] + [0] * (household_count - 1),
+        }
+    )
+    control_spec = pd.DataFrame(
+        {
+            "target": ["num_hh", "rare_hh_type"],
+            "importance": [1e9, 1e9],
+        }
+    )
+    control_totals = pd.Series({"num_hh": target_households, "rare_hh_type": 3000.0})
+
+    status, weights, _ = do_balancing(
+        control_spec=control_spec,
+        total_hh_control_col="num_hh",
+        max_expansion_factor=max_expansion_factor,
+        min_expansion_factor=None,
+        absolute_upper_bound=None,
+        absolute_lower_bound=None,
+        incidence_df=incidence_table,
+        control_totals=control_totals,
+        initial_weights=initial_weights,
+        use_hard_constraints=True,
+        use_numba=False,
+        numba_precision="float64",
+    )
+
+    assert status["converged"]
+    assert weights["final"].max() <= expected_max_weight
 
 
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
